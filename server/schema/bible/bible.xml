@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<sql>
+<datatypes db="sqlite">
+	<group label="Affinity">
+		<type label="Text" default="" length="1" sql="TEXT" quote="'" color="rgb(255,200,200)"/>
+		<type label="Numeric" default="0" length="0" sql="NUMERIC" quote="" color="rgb(238,238,170)"/>
+		<type label="Integer" default="0" length="0" sql="INTEGER" quote="" color="rgb(238,238,170)"/>
+		<type label="Real" default="0" length="0" sql="REAL" quote="" color="rgb(238,238,170)"/>
+		<type label="None" default="" length="0" sql="NONE" quote="" color="rgb(200,255,200)"/>
+	</group>
+</datatypes><table x="400" y="200" name="verse">
+<row name="translation" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="translation" row="id" />
+</row>
+<row name="book" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="book" row="position" />
+</row>
+<row name="chapter" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="verse" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="text" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<key type="UNIQUE" name="">
+<part>translation</part>
+<part>book</part>
+<part>chapter</part>
+<part>verse</part>
+<part>text</part>
+</key>
+</table>
+<table x="600" y="100" name="translation">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
+<row name="code" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="600" y="300" name="book">
+<row name="position" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>position</part>
+</key>
+</table>
+</sql>
+
