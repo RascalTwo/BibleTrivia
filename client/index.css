@@ -1,0 +1,117 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#vue-app {
+	text-align: center;
+}
+
+#new-game-button {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+
+#message-box {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 5px;
+	border-bottom-left-radius: 15px;
+	cursor: pointer;
+}
+
+.message-level-success {
+	background-color: rgb(87, 255, 87);
+}
+
+.message-level-warn {
+	background-color: rgb(255, 255, 87);
+}
+
+.message-level-error {
+	background-color: rgb(255, 87, 87);
+}
+
+
+#game {
+	position: relative;
+}
+
+#verse {
+	font-weight: bold;
+	padding: 50px;
+}
+
+#lives {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+#book-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
+.clickable > span {
+	cursor: pointer;
+}
+
+.not-clickable > span {
+	cursor: not-allowed;
+}
+
+
+.book {
+	flex: 1 1 auto;
+	border: 1px solid brown;
+	border-radius: 5px;
+	background-color: rgb(255, 196, 0);
+	padding: 2.5px;
+	margin: 2.5px;
+	text-align: center;
+}
+
+.book:hover {
+	background-color: rgb(255, 216, 89);
+}
+
+.wrong-book:hover, .right-book:hover, .actual-book:hover {
+	cursor: not-allowed;
+}
+
+
+.wrong-book {
+	background-color: red;
+	color: white;
+}
+
+.wrong-book:hover {
+	background-color: red;
+}
+
+
+.right-book {
+	background-color: green;
+	color: white;
+}
+
+.right-book:hover {
+	background-color: green;
+}
+
+
+.actual-book {
+	background-color: purple;
+	color: white;
+}
+
+.actual-book:hover {
+	background-color: purple;
+}

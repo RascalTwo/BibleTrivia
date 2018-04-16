@@ -1,3 +1,4 @@
 {
-  "baseUrl": "http://localhost:5325"
+  "baseUrl": "http://localhost:5325",
+  "videoCompression": false
 }

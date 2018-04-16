@@ -2,10 +2,13 @@
 
 Database
 
-API Routes
-
-Client-Page
-
 CLI Script for client-side testing
 
-Comments
+Tests:
+
+- Client
+	- Winning a game.
+
+Hard-mode
+
+Adjust gameplay as planned.

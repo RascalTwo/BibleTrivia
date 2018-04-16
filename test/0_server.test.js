@@ -2,7 +2,7 @@ const { expect } = require('chai');
 
 const path = require('path');
 
-const Server = require('../server.js')();
+const Server = require('../server.js');
 
 
 describe('Server', () => {

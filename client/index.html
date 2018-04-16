@@ -2,8 +2,53 @@
 <html>
 	<head>
 		<title>Bible Trivia</title>
+		<link rel="stylesheet" type="text/css" href="/index.css">
+		<link rel="stylesheet" type="text/vss" hred="/normalize.min.css">
+		<script type="text/javascript" src="/vue.js"></script>
 	</head>
 	<body>
-		<h1>Welcome to Bible Trivia</h1>
+		<div id="vue-app">
+			<message-box
+				v-if="message.value"
+				v-on:clear-message="clearMessage"
+				v-bind:value.sync="message.value"
+				v-bind:level.sync="message.level"
+			></message-box>
+			<button id="new-game-button" v-if="!newGameMenu" v-on:click="clearGame">New Game</button>
+			<!-- message-box and new-game-button are absolutely positioned -->
+
+			<h1>Bible Trivia</h1>
+			<start-menu v-if="newGameMenu" v-on:submitted="startGame"></start-menu>
+			
+			<div v-else id="game">
+				<span id="lives">{{ game.lives }}</span>
+				<div id="verse">{{ game.verse }}</div>
+				<input v-model="bookFilter" placeholder="Book">
+				<div id="book-list" v-bind:class="(game.playing ? '' : 'not-') + 'clickable'">
+					<span
+						v-on:click="guess(book.position)"
+						v-bind:class="'book' + (book.class ? ' ' + book.class : '')"
+						v-for="book in filteredBooks"
+					>{{ book.name }}</span>
+				</div>
+			</div>
+		</div>
+
+		<script id="message-box-template" type="text/x-template">
+			<div id="message-box" v-on:click="clearMessage" v-bind:class="'message-level-' + level">{{ text }}</div>
+		</script>
+
+		<script id="start-menu-template" type="text/x-template">
+			<div id="start-menu">
+				<p>Testaments</p>
+				<label>Old<input type="checkbox" v-model="oldTestament"></label>
+				<br>
+				<label>New<input type="checkbox" v-model="newTestament"></label>
+				<br>
+				<button v-on:click="$emit('submitted', testamentCode)" v-bind:disabled="invalid">Start Game</button>
+			</div>
+		</script>
+
+		<script type="text/javascript" src="/index.js"></script>
 	</body>
 </html>

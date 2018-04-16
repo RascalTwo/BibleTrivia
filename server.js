@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 const morgan = require('morgan');
+const compression = require('compression');
 
 
 const Database = require('./server/database.js');
@@ -10,6 +11,12 @@ const routes = require('./server/routes.js');
 
 
 class Server {
+	/**
+	 * Create the server instance.
+	 * 
+	 * @param {Number} [port=8080] Port to start on.
+	 * @param {Object} paths Paths to use.
+	 */
 	constructor(port, paths){
 		this.port = port || 8080;
 
@@ -25,11 +32,24 @@ class Server {
 		this.httpServer;
 	}
 
+
+	/**
+	 * Initalize the server.
+	 * 
+	 * @returns {Promise<Server>} Server instance to allow for chaining.
+	 */
 	init(){
 		this.express = express();
 
 		this.express.use(morgan('common'));
 
+		this.express.use(compression());
+
+		this.express.use(express.json());
+		this.express.use(express.urlencoded({
+			extended: true
+		}));
+		
 		return new Database(this).init().then(db => {
 			this.db = db;
 
@@ -44,6 +64,12 @@ class Server {
 		});
 	}
 
+
+	/**
+	 * Start the server.
+	 * 
+	 * @returns {Promise<Server>} Server instance to allow for chaining.
+	 */
 	start(){
 		return new Promise((resolve, reject) => {
 			if (!this.express) return reject(new Error('Server has not been initalized'));
@@ -57,6 +83,12 @@ class Server {
 		});
 	}
 
+
+	/**
+	 * Stop the server.
+	 * 
+	 * @returns {Promise<Server>} Server instance to allow for chaining.
+	 */
 	stop(){
 		if (!this.httpServer) return Promise.reject(new Error('Server has not been started'));
 
@@ -64,10 +96,8 @@ class Server {
 	}
 }
 
-module.exports = function run(){
+module.exports = (function run(){
 	if (require.main !== module) return Server;
 
-	return new Server(process.argv[2] || process.env.PORT).init().then(server => server.start()).catch(console.error);
-};
-
-module.exports();
+	return new Server(process.argv[2] || process.env.PORT).init().then(server => server.start());
+})();

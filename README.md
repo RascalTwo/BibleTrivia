@@ -8,6 +8,8 @@ A trivia game that tests your knowlage of where verses are in the Bible.
 
 `server` and `client` contain files and resources for their respective portions.
 
+The front-end is powered by Vue.js while the back-end is powered by Express and SQLite.
+
 ## Tests
 
 Server-side tests are ran with `mocha` and `chai` from the `test` directory, while client-side tests are ran by `cypress`, which uses `mocha` and `chai` as it's backend.

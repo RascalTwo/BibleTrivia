@@ -1,6 +1,6 @@
 {
   "name": "bible_trivia",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Trivia game for the Bible",
   "license": "MIT",
   "author": "Rascal_Two <therealrascaltwo@gmail.com>",
@@ -8,12 +8,13 @@
   "scripts": {
     "dev": "nodemon server.js --watch server.js --watch server/",
     "pre-commit": "npm-run-all eslint test",
-    "eslint": "eslint server.js server/ client/ test/",
+    "eslint": "eslint server.js server/ client/index.js test/",
     "test": "npm-run-all test-server",
     "test-server": "nyc --reporter=html --reporter=text --reporter=text-summary mocha test/*test.js",
     "test-server-quick": "mocha test/*test.js"
   },
   "dependencies": {
+    "compression": "^1.7.2",
     "express": "^4.16.3",
     "morgan": "^1.9.0",
     "npm-run-all": "^4.1.2",
