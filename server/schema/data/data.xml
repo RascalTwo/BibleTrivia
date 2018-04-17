@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<sql>
+<datatypes db="sqlite">
+	<group label="Affinity">
+		<type label="Text" default="" length="1" sql="TEXT" quote="'" color="rgb(255,200,200)"/>
+		<type label="Numeric" default="0" length="0" sql="NUMERIC" quote="" color="rgb(238,238,170)"/>
+		<type label="Integer" default="0" length="0" sql="INTEGER" quote="" color="rgb(238,238,170)"/>
+		<type label="Real" default="0" length="0" sql="REAL" quote="" color="rgb(238,238,170)"/>
+		<type label="None" default="" length="0" sql="NONE" quote="" color="rgb(200,255,200)"/>
+	</group>
+</datatypes><table x="200" y="100" name="game">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="translation_id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="testament_code" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="difficulty_id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="difficulty" row="id" />
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="600" y="100" name="guess">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
+<row name="round_id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="round" row="id" />
+</row>
+<row name="book_pos" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="chapter" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="when" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="400" y="100" name="round">
+<row name="id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="game_id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="game" row="id" />
+</row>
+<row name="verse_bcv" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<row name="picked" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="400" y="300" name="user">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+</row>
+<row name="created" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="password" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="100" y="300" name="difficulty">
+<row name="id" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>TEXT</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+</sql>

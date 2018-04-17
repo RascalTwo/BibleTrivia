@@ -1,6 +1,6 @@
 {
   "name": "bible_trivia",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Trivia game for the Bible",
   "license": "MIT",
   "author": "Rascal_Two <therealrascaltwo@gmail.com>",
@@ -16,8 +16,10 @@
   "dependencies": {
     "compression": "^1.7.2",
     "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "morgan": "^1.9.0",
     "npm-run-all": "^4.1.2",
+    "session-file-store": "^1.2.0",
     "sqlite": "^2.9.1"
   },
   "devDependencies": {

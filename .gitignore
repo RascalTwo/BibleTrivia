@@ -3,5 +3,7 @@ node_modules
 coverage
 .nyc_output
 
+sessions
+
 shrinkwrap.yaml
 *lock.json

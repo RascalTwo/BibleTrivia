@@ -4,6 +4,8 @@ const express = require('express');
 const morgan = require('morgan');
 const compression = require('compression');
 
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
 
 const Database = require('./server/database.js');
 const Bible = require('./server/bible.js');
@@ -16,8 +18,9 @@ class Server {
 	 * 
 	 * @param {Number} [port=8080] Port to start on.
 	 * @param {Object} paths Paths to use.
+	 * @param {Boolean} testing Testing flag.
 	 */
-	constructor(port, paths){
+	constructor(port, paths, testing = false){
 		this.port = port || 8080;
 
 		this.paths = Object.assign({
@@ -25,6 +28,8 @@ class Server {
 		}, paths, {
 			root: __dirname
 		});
+
+		this.testing = testing;
 
 		this.db;
 		this.bible;
@@ -41,13 +46,24 @@ class Server {
 	init(){
 		this.express = express();
 
-		this.express.use(morgan('common'));
+		if (process.env.NODE_ENV !== 'test') this.express.use(morgan('common'));
 
 		this.express.use(compression());
 
 		this.express.use(express.json());
 		this.express.use(express.urlencoded({
 			extended: true
+		}));
+
+		this.express.use(session({
+			store: this.testing ? undefined : new FileStore,
+			cookie: {
+				httpOnly: false
+			},
+			genid: () => process.hrtime().reduce((total, value) => total + value, 0).toString(),
+			secret: '2776209b9d9d72eef92d0910e8c72e13',
+			resave: false,
+			saveUninitialized: true
 		}));
 		
 		return new Database(this).init().then(db => {
@@ -56,9 +72,10 @@ class Server {
 			return new Bible(this).init();
 		}).then(bible => {
 			this.bible = bible;
-			this.express.use(express.static(path.join(__dirname, 'client')));
 
 			routes(this);
+
+			this.express.use(express.static(path.join(__dirname, 'client')));
 			
 			return this;
 		});
@@ -77,6 +94,7 @@ class Server {
 			this.httpServer = this.express.listen(this.port, () => {
 				console.log(`Starting from ${this.paths.root}`);
 				console.log(`Storing data in ${this.paths.data}`);
+				if (this.testing) console.log('Starting in testing mode');
 				console.log(`Listening on port ${this.port}`);
 				return resolve(this);
 			}).on('error', reject);
@@ -99,5 +117,7 @@ class Server {
 module.exports = (function run(){
 	if (require.main !== module) return Server;
 
-	return new Server(process.argv[2] || process.env.PORT).init().then(server => server.start());
+	const testing = process.argv.some(arg => arg.trim().match(/--test/i));
+
+	return new Server(process.argv[2] || process.env.PORT, {}, testing).init().then(server => server.start());
 })();

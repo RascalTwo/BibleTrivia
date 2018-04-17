@@ -53,5 +53,6 @@ It can support an infinate number of translations.
 
 ### Data
 
-This database is currently not used, but it is planned to manage leaderboard and user information.
+The database contains games, rounds, guesses, and users.
 
+From all this data, leaderboards should be creatable.

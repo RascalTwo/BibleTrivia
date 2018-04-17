@@ -1,8 +1,12 @@
 html, body {
-	width: 100%;
-	height: 100%;
 	margin: 0;
 	padding: 0;
+	font-size: 16px;
+}
+
+body {
+	background-image: url('/image/parchment.png');
+	background-size: cover;
 }
 
 #vue-app {
@@ -15,6 +19,7 @@ html, body {
 	left: 0;
 }
 
+/* #region Message Box */
 
 #message-box {
 	position: absolute;
@@ -25,18 +30,110 @@ html, body {
 	cursor: pointer;
 }
 
-.message-level-success {
-	background-color: rgb(87, 255, 87);
+	.message-level-success {
+		background-color: rgb(87, 255, 87);
+	}
+
+	.message-level-warn {
+		background-color: rgb(255, 255, 87);
+	}
+
+	.message-level-error {
+		background-color: rgb(255, 87, 87);
+	}
+
+/* #endregion */
+
+/* #region Difficulty Checkbox */
+
+#difficulty-switch {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 35px;
 }
 
-.message-level-warn {
-	background-color: rgb(255, 255, 87);
+	#difficulty-switch input {
+		display:none;
+	}
+
+	#difficulty-slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ca2222;
+		transition: .5s;
+		border-radius: 34px;
+	}
+
+	#difficulty-slider:before {
+		position: absolute;
+		content: "";
+		height: 25px;
+		width: 25px;
+		left: 5px;
+		bottom: 5px;
+		background-color: white;
+		transition: .5s;
+		border-radius: 50%;
+	}
+
+	input:checked + #difficulty-slider {
+		background-color: #2ab934;
+	}
+
+	input:checked + #difficulty-slider:before {
+		transform: translateX(55px);
+	}
+
+	input:checked + #difficulty-slider .on {
+		display: block;
+	}
+
+	input:checked + #difficulty-slider .off {
+		display: none;
+	}
+
+	.on, .off {
+		color: white;
+		position: absolute;
+		transform: translate(-50%,-50%);
+		top: 50%;
+	}
+
+	.on {
+		display: none;
+		left: 35%;
+	}
+
+	.off {
+		left: 65%;
+	}
+
+
+/* #endregion */
+
+.model {
+	position: fixed;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: rgba(0,0,0,0.5);
 }
 
-.message-level-error {
-	background-color: rgb(255, 87, 87);
+.model-content {
+	display: inline-block;
+	padding: 20px;
+	margin-top: 25vh;
+	background-color: #fefefe;
+	border: 1px solid #888;
+	border-radius: 25px;
 }
-
 
 #game {
 	position: relative;
@@ -52,6 +149,14 @@ html, body {
 	top: 0;
 	right: 0;
 }
+
+#rounds {
+	position: absolute;
+	top: 0;
+	left: 10px;
+}
+
+/* #region Book List */
 
 #book-list {
 	display: flex;
@@ -107,6 +212,16 @@ html, body {
 }
 
 
+.active-book {
+	background-color: rgb(0, 255, 242);
+}
+
+.active-book:hover {
+	cursor: pointer;
+	background-color: rgb(0, 255, 242);
+}
+
+
 .actual-book {
 	background-color: purple;
 	color: white;
@@ -115,3 +230,5 @@ html, body {
 .actual-book:hover {
 	background-color: purple;
 }
+
+/* #endregion */

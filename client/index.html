@@ -21,14 +21,29 @@
 			<start-menu v-if="newGameMenu" v-on:submitted="startGame"></start-menu>
 			
 			<div v-else id="game">
+				<div id="chapter-selector" v-if="chapterSelector.active" class="model">
+					<div class="model-content">
+						<h2>{{ chapterSelector.book.name }}</h2>
+						<label>
+							Chapter
+							<select v-model="chapterSelector.chosen" v-bind:disabled="chapterSelector.disabled">
+								<option v-for="c in chapterSelector.count" v-bind:value="c">{{ c }}</option>
+							</select>
+						</label>
+						<br>
+						<br>
+						<button v-on:click="closeChapterSelector" vi-bind:disabled="chapterSelector.disabled">Close</button>
+					</div>
+				</div>
+				<span id="rounds">{{ game.rounds.length }}</span>
 				<span id="lives">{{ game.lives }}</span>
-				<div id="verse">{{ game.verse }}</div>
-				<input v-model="bookFilter" placeholder="Book">
-				<div id="book-list" v-bind:class="(game.playing ? '' : 'not-') + 'clickable'">
+				<div id="verse">{{ game.currentRound.verse_text }}</div>
+				<input v-model="bookList.filter" placeholder="Book">
+				<div id="book-list" v-bind:class="((!game.playing || !bookList.clickable) ? 'not-' : '') + 'clickable'">
 					<span
-						v-on:click="guess(book.position)"
+						v-on:click="chooseBook(book.position)"
 						v-bind:class="'book' + (book.class ? ' ' + book.class : '')"
-						v-for="book in filteredBooks"
+						v-for="book in bookListFiltered"
 					>{{ book.name }}</span>
 				</div>
 			</div>
@@ -45,7 +60,16 @@
 				<br>
 				<label>New<input type="checkbox" v-model="newTestament"></label>
 				<br>
-				<button v-on:click="$emit('submitted', testamentCode)" v-bind:disabled="invalid">Start Game</button>
+				Difficulty
+				<label id="difficulty-switch">
+					<input type="checkbox" v-model="difficultyEasy">
+					<div id="difficulty-slider">
+						<span class="on">Easy</span>
+						<span class="off">Hard</span>
+					</div>
+				</label>
+				<br>
+				<button v-on:click="$emit('submitted', testamentCode, Number(!difficultyEasy))" v-bind:disabled="invalid">Start Game</button>
 			</div>
 		</script>
 

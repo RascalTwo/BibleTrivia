@@ -1,7 +1,41 @@
 const path = require('path');
 
+
+/**
+ * Get the ID of the current user.
+ * 
+ * @param {Object} request Request to get user from.
+ * 
+ * @returns {Number} ID of the user.
+ */
+const getUserId = request => {
+	if (request.user) return request.user.id;
+	return Number(request.sessionID);
+};
+
+
+/**
+ * Handle an API rejection.
+ * 
+ * @param {Object} response Response to handle rejection with.
+ * 
+ * @returns {Function}
+ */
+const handleAPIRejection = response => error => {
+	let text;
+
+	if (error instanceof Error) text =  error.name + ':' + error.message + '\n' + error.stack;
+	else if (Array.isArray(error) || typeof error === 'object') text = JSON.stringify(error, null, '');
+	
+	return response.status(500).send({
+		success: false,
+		message: [text, 'error']
+	});
+};
+
+
 module.exports = server => {
-	server.express.get('/', (_, response) => response.sendFile(path.join(server.paths.root, 'index.html')));
+	server.express.get('/', (_, response) => response.sendFile(path.join(server.paths.root, 'client', 'index.html')));
 
 	server.express.get('/api', (_, response) => server.bible.getRandomVerse().then(verse => response.send({
 		success: true,
@@ -10,22 +44,20 @@ module.exports = server => {
 
 	server.express.post('/api/game', (request, response) => {
 		const testamentCode = Number(request.body.testament);
-		if (!testamentCode || isNaN(testamentCode) || (testamentCode < 1 || testamentCode > 3)) return response.send({
+		if (testamentCode === undefined || isNaN(testamentCode) || (testamentCode < 1 || testamentCode > 3)) return response.send({
 			success: false,
 			message: ['Invalid testament code', 'error']
 		});
 
-		const min = testamentCode === 2 ? 40 : 1;
-		const max = testamentCode === 1 ? 39 : 66;
-		
-		return server.db.createGame(1, min, max).then(data => response.send({
-			success: true,
-			message: ['Starting new game...', 'success'],
-			data: data
-		})).catch(error => response.status(500).send({
+		const difficultyId = Number(request.body.difficulty);
+		if (difficultyId === undefined || isNaN(difficultyId) || (difficultyId < 0 || difficultyId > 1)) return response.send({
 			success: false,
-			message: error
-		}));
+			message: ['Invalid difficulty ID', 'error']
+		});
+
+		return server.db.startGame(getUserId(request), 1, testamentCode, difficultyId)
+			.then(result => response.send(result))
+			.catch(handleAPIRejection(response));
 	});
 
 	server.express.post('/api/game/:id/guess', (request, response) => {
@@ -34,12 +66,15 @@ module.exports = server => {
 			success: false,
 			message: ['Invalid book', 'error']
 		});
+
+		const chapter = Number(request.body.chapter);
+		if (!isNaN(chapter) && (chapter < 1 || chapter > 117)) return response.send({
+			success: false,
+			message: ['Invalid chapter', 'error']
+		});
 		
-		return server.db.guess(request.params.id, book)
+		return server.db.makeGuess(getUserId(request), request.params.id, book, chapter)
 			.then(result => response.send(result))
-			.catch(error => response.status(500).send({
-				success: false,
-				message: error
-			}));
+			.catch(handleAPIRejection(response));
 	});
 };

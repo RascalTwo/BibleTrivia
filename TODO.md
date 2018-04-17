@@ -1,7 +1,5 @@
 # TODO
 
-Database
-
 CLI Script for client-side testing
 
 Tests:
@@ -9,6 +7,10 @@ Tests:
 - Client
 	- Winning a game.
 
-Hard-mode
+Make hard mode more responsive.
 
-Adjust gameplay as planned.
+Round-ending screen displaying the full verse reference.
+
+Abandoned game management:
+- Add the ability for users to resume abandoned games
+- Delete abandoned session-games after a certain amount of time.

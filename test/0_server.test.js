@@ -12,15 +12,15 @@ describe('Server', () => {
 
 	describe('constructor', () => {
 		it('has a default port of 8080', () => {
-			const server = new Server();
+			const server = new Server(undefined, {}, true);
 			expect(server.port).to.equal(8080);
 		});
 		it('has a customizable port', () => {
-			const server = new Server(1234);
+			const server = new Server(1234, {}, true);
 			expect(server.port).to.equal(1234);
 		});
 		it('has default paths', () => {
-			const server = new Server();
+			const server = new Server(undefined, {}, true);
 			expect(server.paths).to.deep.equal({
 				root: path.resolve(__dirname, '..'),
 				data: path.resolve(__dirname, '..', 'data')
@@ -30,20 +30,20 @@ describe('Server', () => {
 			const server = new Server(1234, {
 				root: 'invalidroot',
 				data: 'newdata'
-			});
+			}, true);
 			expect(server.paths).to.deep.equal({
 				root: path.resolve(__dirname, '..'),
 				data: 'newdata'
 			});
 		});
 	});
-
+	
 	describe('init', () => {
-		it('does not fail', () =>  new Server().init().then(server => {
+		it('does not fail', () =>  new Server(undefined, {}, true).init().then(server => {
 			expect(server).to.be.a('object');
 		}));
-
-		it('initalizes everything', () => new Server().init().then(server => {
+		
+		it('initalizes everything', () => new Server(undefined, {}, true).init().then(server => {
 			expect(server.express).to.be.a('function');
 
 			expect(server.db).to.be.a('object');
@@ -52,10 +52,10 @@ describe('Server', () => {
 			expect(server.bible).to.be.a('object');
 			expect(server.bible).to.have.property('driver');
 		}));
+		
+		it('starts and stops', () => new Server(undefined, {}, true).init().then(instance => instance.start()).then(instance => instance.stop()));
 
-		it('starts and stops', () => new Server().init().then(instance => instance.start()).then(instance => instance.stop()));
-
-		it('must be initalized before starting', () => new Server().start()
+		it('must be initalized before starting', () => new Server(undefined, {}, true).start()
 			.then(() => expect.fail())
 			.catch(error => {
 				expect(error).to.be.a('error');
@@ -63,7 +63,7 @@ describe('Server', () => {
 			})
 		);
 	
-		it('must be started before stopping', () => new Server().stop()
+		it('must be started before stopping', () => new Server(undefined, {}, true).stop()
 			.then(() => expect.fail())
 			.catch(error => {
 				expect(error).to.be.a('error');
