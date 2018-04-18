@@ -75,19 +75,19 @@ describe('gameplay', () => {
 
 	it('lives decrement', () => {
 		cy.get('#start-menu').find('button').click();
-		cy.get('#lives').should('have.text', '5');
+		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '5/5 lives');
 		cy.get('#book-list').children().eq(64).click();
-		cy.get('#lives').should('have.text', '4');
+		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '4/5 lives');
 		cy.get('#book-list').children().eq(64).should('have.class', 'wrong-book');
 	});
 
 	it('game is lost', () => {
 		cy.get('#start-menu').find('button').click();
-		cy.get('#lives').should('have.text', '5');
+		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '5/5 lives');
 
 		[63, 62, 56, 30, 64].forEach(short => cy.get('#book-list').children().eq(short).click());
 
-		cy.get('#lives').should('have.text', '0');
+		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '0/5 lives');
 		cy.get('#message-box').should('have.text', 'You got 0 verses right in 0 minutes');
 
 		cy.get('.actual-book');
@@ -120,7 +120,7 @@ describe('gameplay', () => {
 			cy.get('#chapter-selector').find('h2').should('have.text', 'Genesis');
 			cy.get('#chapter-selector').find('select').select('1');
 
-			cy.get('#lives').should('have.text', '4');
+			cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '4/5 lives');
 		});
 	});
 });

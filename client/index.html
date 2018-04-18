@@ -8,45 +8,74 @@
 	</head>
 	<body>
 		<div id="vue-app">
-			<message-box
-				v-if="message.value"
-				v-on:clear-message="clearMessage"
-				v-bind:value.sync="message.value"
-				v-bind:level.sync="message.level"
-			></message-box>
-			<button id="new-game-button" v-if="!newGameMenu" v-on:click="clearGame">New Game</button>
+			<transition name="slide-top-right">
+				<message-box
+					v-if="message.value"
+					v-on:clear-message="clearMessage"
+					v-bind:value.sync="message.value"
+					v-bind:level.sync="message.level"
+				></message-box>
+			</transition>
+			<transition tag="span" name="slide-top-left">
+			<input
+				type="image"
+				src="/image/new_game.svg"
+				alt="Restart Game"
+				title="Restart Game"
+				id="new-game-button"
+				v-if="!newGameMenu"
+				v-on:click="clearGame" />
+			</transition>
 			<!-- message-box and new-game-button are absolutely positioned -->
 
 			<h1>Bible Trivia</h1>
-			<start-menu v-if="newGameMenu" v-on:submitted="startGame"></start-menu>
-			
-			<div v-else id="game">
-				<div id="chapter-selector" v-if="chapterSelector.active" class="model">
-					<div class="model-content">
-						<h2>{{ chapterSelector.book.name }}</h2>
-						<label>
-							Chapter
-							<select v-model="chapterSelector.chosen" v-bind:disabled="chapterSelector.disabled">
-								<option v-for="c in chapterSelector.count" v-bind:value="c">{{ c }}</option>
-							</select>
-						</label>
-						<br>
-						<br>
-						<button v-on:click="closeChapterSelector" vi-bind:disabled="chapterSelector.disabled">Close</button>
-					</div>
+
+			<transition name="slide-bottom" appear mode="out-in">
+				<start-menu v-if="newGameMenu" v-on:submitted="startGame" key="start-menu"></start-menu>
+				<div v-if="!newGameMenu" id="game" key="game">
+					<transition name="fade">
+						<div id="chapter-selector" v-if="chapterSelector.active" class="model">
+							<div class="model-content">
+								<h2>{{ chapterSelector.book.name }}</h2>
+								<label>
+									Chapter
+									<select v-model="chapterSelector.chosen" v-bind:disabled="chapterSelector.disabled">
+										<option v-for="c in chapterSelector.count" v-bind:value="c">{{ c }}</option>
+									</select>
+								</label>
+								<br>
+								<br>
+								<button v-on:click="closeChapterSelector" vi-bind:disabled="chapterSelector.disabled">Close</button>
+							</div>
+						</div>
+					</transition>
+					<span id="rounds">Round #{{ game.rounds.length }}</span>
+					<span id="lives">
+						<span v-if="Number.isInteger(game.lives)">
+							<img v-for="_ in 5 - game.lives" src="/image/heart_crossed.png" class="heart" v-bind:alt="game.lives + '/5 lives'" v-bind:title="game.lives + '/5 lives'">
+							<img v-for="_ in game.lives" src="/image/heart.png" class="heart" v-bind:alt="game.lives + '/5 lives'" v-bind:title="game.lives + '/5 lives'">
+						</span>
+						<span v-else>
+							Lives: {{ game.lives }}
+						</span>
+					</span>
+					<div id="verse">{{ game.currentRound.verse_text }}</div>
+					<input v-model="bookList.filter" placeholder="Book">
+					<transition-group
+						name="book-list"
+						id="book-list"
+						tag="div"
+						v-bind:class="((!game.playing || !bookList.clickable) ? 'not-' : '') + 'clickable'"
+					>
+						<span
+							v-on:click="chooseBook(book.position)"
+							v-bind:class="'book' + (book.class ? ' ' + book.class : '')"
+							v-for="book in bookListFiltered"
+							v-bind:key="book.position"
+						>{{ book.name }}</span>
+					</transition-group>
 				</div>
-				<span id="rounds">{{ game.rounds.length }}</span>
-				<span id="lives">{{ game.lives }}</span>
-				<div id="verse">{{ game.currentRound.verse_text }}</div>
-				<input v-model="bookList.filter" placeholder="Book">
-				<div id="book-list" v-bind:class="((!game.playing || !bookList.clickable) ? 'not-' : '') + 'clickable'">
-					<span
-						v-on:click="chooseBook(book.position)"
-						v-bind:class="'book' + (book.class ? ' ' + book.class : '')"
-						v-for="book in bookListFiltered"
-					>{{ book.name }}</span>
-				</div>
-			</div>
+			</transition>
 		</div>
 
 		<script id="message-box-template" type="text/x-template">
@@ -56,20 +85,20 @@
 		<script id="start-menu-template" type="text/x-template">
 			<div id="start-menu">
 				<p>Testaments</p>
-				<label>Old<input type="checkbox" v-model="oldTestament"></label>
+				<label>Old<input type="checkbox" v-model="oldTestament" v-bind:disabled="disabled"></label>
 				<br>
-				<label>New<input type="checkbox" v-model="newTestament"></label>
+				<label>New<input type="checkbox" v-model="newTestament" v-bind:disabled="disabled"></label>
 				<br>
 				Difficulty
 				<label id="difficulty-switch">
-					<input type="checkbox" v-model="difficultyEasy">
+					<input type="checkbox" v-model="difficultyEasy" v-bind:disabled="disabled">
 					<div id="difficulty-slider">
 						<span class="on">Easy</span>
 						<span class="off">Hard</span>
 					</div>
 				</label>
 				<br>
-				<button v-on:click="$emit('submitted', testamentCode, Number(!difficultyEasy))" v-bind:disabled="invalid">Start Game</button>
+				<button v-on:click="startGame" v-bind:disabled="invalid || disabled">Start Game</button>
 			</div>
 		</script>
 

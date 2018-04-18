@@ -23,7 +23,8 @@ Vue.component('start-menu', {
 	data: () => ({
 		difficultyEasy: true,
 		newTestament: true,
-		oldTestament: true
+		oldTestament: true,
+		disabled: false
 	}),
 	computed: {
 		invalid: function(){
@@ -35,6 +36,12 @@ Vue.component('start-menu', {
 			if (this.oldTestament) code += 1;
 			if (this.newTestament) code += 2;
 			return code;
+		}
+	},
+	methods: {
+		startGame: function(){
+			this.disabled = true;
+			return this.$emit('submitted', this.testamentCode, Number(!this.difficultyEasy));
 		}
 	},
 	template: '#start-menu-template'
