@@ -63,6 +63,24 @@ Vue.component('life-counter', {
 });
 
 
+// Displays a verse
+Vue.component('verse', {
+	props: ['text', 'bcv', 'bookMap'],
+	computed: {
+		loc: function(){
+			if (!this.bcv) return false;
+			const [bookPos, chapter, verse] =this.bcv.split('-').map(Number);
+			return {
+				book: this.bookMap[bookPos],
+				chapter,
+				verse
+			};
+		}
+	},
+	template: '#verse-template'
+});
+
+
 // The global App.
 window.app = new Vue({
 	el: '#vue-app',
@@ -72,6 +90,7 @@ window.app = new Vue({
 			value: null,
 			level: null
 		},
+		referenceMenu: false,
 		chapterSelector: {
 			book: {},
 			active: false,
@@ -86,7 +105,16 @@ window.app = new Vue({
 			filtered: []
 		},
 		game: {
-			lives: null
+			lives: null,
+			rounds: [],
+			currentRound: {
+				verse_text: null,
+				verse_bcv: null
+			},
+			previousRound: {
+				verse_text: null,
+				verse_bcv: null
+			}
 		}
 	},
 	watch: {
@@ -113,9 +141,18 @@ window.app = new Vue({
 			const positionFilter = Number(this.bookList.filter);
 			const regex = new RegExp(this.bookList.filter, 'i');
 			return this.bookList.books.filter(book => regex.test(book.name) || book.position === positionFilter);
+		},
+		bookMap: function(){
+			return this.bookList.books.reduce((map, book) => {
+				map[book.position] = book;
+				return map;
+			}, {});
 		}
 	},
 	methods: {
+		closeReference: function(){
+			this.referenceMenu = false;
+		},
 		// Start a new game with the given testaments.
 		startGame: function(testamentCode, difficultyId){
 			return fetch('/api/game', {
@@ -137,9 +174,10 @@ window.app = new Vue({
 						return book;
 					});
 
-					this.game = Object.assign(json.data.game, {
+					this.game = Object.assign({}, json.data.game, {
 						playing: true,
-						currentRound: json.data.game.rounds[json.data.game.rounds.length - 1]
+						currentRound: json.data.game.rounds[json.data.game.rounds.length - 1],
+						previousRound: json.data.game.rounds[json.data.game.rounds.length - 2]
 					});
 					
 					this.newGameMenu = false;
@@ -227,12 +265,16 @@ window.app = new Vue({
 
 					this.game.currentRound.verse_bcv = bcv;
 					if (round){
+						this.game.previousRound = Object.assign({}, this.game.currentRound);
 						this.game.currentRound = round;
 						this.game.rounds.push(round);
 					}
 					else{
 						this.bookList.clickable = false;
 					}
+
+					this.referenceMenu = true;
+
 					return true;
 				}).catch(catchError(this));
 		},

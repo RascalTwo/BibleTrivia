@@ -2,6 +2,7 @@ html, body {
 	margin: 0;
 	padding: 0;
 	font-size: 16px;
+	height: 100%;
 }
 
 body {
@@ -192,21 +193,20 @@ body {
 	position: relative;
 }
 
-#verse {
+.verse-text {
 	font-weight: bold;
-	padding: 50px;
+	padding: 25px;
 }
 
 #life-counter {
 	background: url("/image/life_sprite.png") repeat-x;
 	background-size: 30px 55.6px;
+	position: absolute;
+	top: -15px;
+	right: 10px;
 	height: 27.5px;
 	width: 150px;
-  font-size: 0;
-  line-height: 0;
-  overflow: hidden;
-  text-indent: -999em;
-  margin: 0 auto;
+	margin: 0 auto;
 }
 
 #life-counter-rating {
@@ -219,15 +219,9 @@ body {
 	transition: all 1.25s;
 }
 
-.heart {
-	width: 25px;
-	height: auto;
-	margin-left: 5px;
-}
-
-#rounds {
+#point-counter {
 	position: absolute;
-	top: 0;
+	top: -15px;
 	left: 10px;
 }
 

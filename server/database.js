@@ -118,19 +118,17 @@ module.exports = class Database{
 					}
 				};
 
-				return this.startNewRound(game, now, false).then(round => {
-					return {
-						success: true,
-						message: ['Correct!', 'success'],
-						data: {
-							correct,
-							guess,
-							lives: game.lives,
-							bcv: round.verse_bcv,
-							round
-						}
-					};
-				});
+				return this.startNewRound(game, now, false).then(nextRound => ({
+					success: true,
+					message: ['Correct!', 'success'],
+					data: {
+						correct,
+						guess,
+						lives: game.lives,
+						bcv: round.verse_bcv,
+						round: nextRound
+					}
+				}));
 			});
 		});
 	}

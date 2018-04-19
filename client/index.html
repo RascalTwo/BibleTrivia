@@ -28,6 +28,7 @@
 			</transition>
 			<!-- message-box and new-game-button are absolutely positioned -->
 
+			<br>
 			<h1>Bible Trivia</h1>
 
 			<transition name="slide-bottom" appear mode="out-in">
@@ -48,10 +49,24 @@
 								<button v-on:click="closeChapterSelector" vi-bind:disabled="chapterSelector.disabled">Close</button>
 							</div>
 						</div>
+						<div v-if="referenceMenu" id="reference-menu" class="model">
+							<div class="model-content">
+								<verse
+									v-bind:text="game.previousRound.verse_text"
+									v-bind:bcv="game.previousRound.verse_bcv"
+									v-bind:book-map="bookMap"
+								></verse>
+								<button v-on:click="closeReference">Close</button>
+							</div>
+						</div>
 					</transition>
-					<span id="rounds">Round #{{ game.rounds.length }}</span>
+					<span id="point-counter">Points: {{ game.rounds.length - 1 }}</span>
 					<life-counter v-bind:lives="game.lives"></life-counter>
-					<div id="verse">{{ game.currentRound.verse_text }}</div>
+					<verse
+						v-bind:text="game.currentRound.verse_text"
+						v-bind:bcv="game.currentRound.verse_bcv"
+						v-bind:book-map="bookMap"
+					></verse>
 					<input v-model="bookList.filter" placeholder="Book">
 					<transition-group
 						name="book-list"
@@ -97,6 +112,13 @@
 		<script id="life-counter-template" type="text/x-template">
 			<div id="life-counter">
 				<span v-bind:style="{ width }" id="life-counter-rating"></span>
+			</div>
+		</script>
+
+		<script id="verse-template" type="text/x-template">
+			<div class="verse">
+				<h2 v-if="loc" class="verse-location">{{ loc.book.name }} {{ loc.chapter }}:{{ loc.verse }}</h2>
+				<div class="verse-text">{{ text }}</div>
 			</div>
 		</script>
 
