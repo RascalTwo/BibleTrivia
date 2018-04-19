@@ -50,15 +50,7 @@
 						</div>
 					</transition>
 					<span id="rounds">Round #{{ game.rounds.length }}</span>
-					<span id="lives">
-						<span v-if="Number.isInteger(game.lives)">
-							<img v-for="_ in 5 - game.lives" src="/image/heart_crossed.png" class="heart" v-bind:alt="game.lives + '/5 lives'" v-bind:title="game.lives + '/5 lives'">
-							<img v-for="_ in game.lives" src="/image/heart.png" class="heart" v-bind:alt="game.lives + '/5 lives'" v-bind:title="game.lives + '/5 lives'">
-						</span>
-						<span v-else>
-							Lives: {{ game.lives }}
-						</span>
-					</span>
+					<life-counter v-bind:lives="game.lives"></life-counter>
 					<div id="verse">{{ game.currentRound.verse_text }}</div>
 					<input v-model="bookList.filter" placeholder="Book">
 					<transition-group
@@ -99,6 +91,12 @@
 				</label>
 				<br>
 				<button v-on:click="startGame" v-bind:disabled="invalid || disabled">Start Game</button>
+			</div>
+		</script>
+
+		<script id="life-counter-template" type="text/x-template">
+			<div id="life-counter">
+				<span v-bind:style="{ width }" id="life-counter-rating"></span>
 			</div>
 		</script>
 

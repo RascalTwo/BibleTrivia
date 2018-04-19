@@ -197,10 +197,26 @@ body {
 	padding: 50px;
 }
 
-#lives {
-	position: absolute;
-	top: 0;
-	right: 10px;
+#life-counter {
+	background: url("/image/life_sprite.png") repeat-x;
+	background-size: 30px 55.6px;
+	height: 27.5px;
+	width: 150px;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  margin: 0 auto;
+}
+
+#life-counter-rating {
+	background: url("/image/life_sprite.png") repeat-x;
+	background-size: 30px 55.6px;
+	background-position: 0 100%;
+	float: left;
+	height: 27.5px;
+	display: block;
+	transition: all 1.25s;
 }
 
 .heart {

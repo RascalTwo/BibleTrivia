@@ -48,6 +48,21 @@ Vue.component('start-menu', {
 });
 
 
+// Display the number of lives
+Vue.component('life-counter', {
+	props: ['lives'],
+	computed: {
+		width: function(){
+			return 100 - ((this.lives / 5) * 100) + '%';
+		},
+		info: function(){
+			return this.lives + '/5 lives remaining';
+		}
+	},
+	template: '#life-counter-template'
+});
+
+
 // The global App.
 window.app = new Vue({
 	el: '#vue-app',
@@ -69,6 +84,9 @@ window.app = new Vue({
 			filter: '',
 			clickable: true,
 			filtered: []
+		},
+		game: {
+			lives: null
 		}
 	},
 	watch: {

@@ -75,19 +75,18 @@ describe('gameplay', () => {
 
 	it('lives decrement', () => {
 		cy.get('#start-menu').find('button').click();
-		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '5/5 lives');
-		cy.get('#book-list').children().eq(64).click();
-		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '4/5 lives');
-		cy.get('#book-list').children().eq(64).should('have.class', 'wrong-book');
+		cy.get('#life-counter-rating').should(elements => expect(elements[0].style.width).to.equal('0%'));
+		cy.get('#book-list').children().eq(64).click().should('have.class', 'wrong-book');
+		cy.get('#life-counter-rating').should(elements => expect(elements[0].style.width).to.equal('20%'));
 	});
 
 	it('game is lost', () => {
 		cy.get('#start-menu').find('button').click();
-		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '5/5 lives');
+		cy.get('#life-counter-rating').should(elements => expect(elements[0].style.width).to.equal('0%'));
 
-		[63, 62, 56, 30, 64].forEach(short => cy.get('#book-list').children().eq(short).click());
+		[63, 62, 56, 30, 64].forEach(short => cy.get('#book-list').children().eq(short).click().should('have.class', 'wrong-book'));
 
-		cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '0/5 lives');
+		cy.get('#life-counter-rating').should(elements => expect(elements[0].style.width).to.equal('100%'));
 		cy.get('#message-box').should('have.text', 'You got 0 verses right in 0 minutes');
 
 		cy.get('.actual-book');
@@ -120,7 +119,7 @@ describe('gameplay', () => {
 			cy.get('#chapter-selector').find('h2').should('have.text', 'Genesis');
 			cy.get('#chapter-selector').find('select').select('1');
 
-			cy.get('#lives').find('img').eq(0).should('have.prop', 'title', '4/5 lives');
+			cy.get('#life-counter-rating').should(elements => expect(elements[0].style.width).to.equal('20%'));
 		});
 	});
 });
