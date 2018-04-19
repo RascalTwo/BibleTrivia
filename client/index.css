@@ -305,4 +305,13 @@ body {
 	background-color: purple;
 }
 
+
+.wrong-chapter-book {
+	background-color: rgb(255, 103, 255);
+}
+
+.wrong-chapter-book:hover {
+	background-color: rgb(255, 103, 255);
+}
+
 /* #endregion */

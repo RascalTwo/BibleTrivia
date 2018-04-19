@@ -34,14 +34,14 @@
 			<transition name="slide-bottom" appear mode="out-in">
 				<start-menu v-if="newGameMenu" v-on:submitted="startGame" key="start-menu"></start-menu>
 				<div v-if="!newGameMenu" id="game" key="game">
-					<transition name="fade">
-						<div id="chapter-selector" v-if="chapterSelector.active" class="model">
+					<transition-group name="fade">
+						<div id="chapter-selector" v-if="chapterSelector.active" class="model" key="0">
 							<div class="model-content">
 								<h2>{{ chapterSelector.book.name }}</h2>
 								<label>
 									Chapter
 									<select v-model="chapterSelector.chosen" v-bind:disabled="chapterSelector.disabled">
-										<option v-for="c in chapterSelector.count" v-bind:value="c">{{ c }}</option>
+										<option v-for="c in chapterSelector.count" v-if="!chapterSelector.book.wrongChapters.includes(c)" v-bind:value="c">{{ c }}</option>
 									</select>
 								</label>
 								<br>
@@ -49,7 +49,7 @@
 								<button v-on:click="closeChapterSelector" vi-bind:disabled="chapterSelector.disabled">Close</button>
 							</div>
 						</div>
-						<div v-if="referenceMenu" id="reference-menu" class="model">
+						<div v-if="referenceMenu" id="reference-menu" class="model" key="1">
 							<div class="model-content">
 								<verse
 									v-bind:text="game.previousRound.verse_text"
@@ -59,7 +59,7 @@
 								<button v-on:click="closeReference">Close</button>
 							</div>
 						</div>
-					</transition>
+					</transition-group>
 					<span id="point-counter">Points: {{ game.rounds.length - 1 }}</span>
 					<life-counter v-bind:lives="game.lives"></life-counter>
 					<verse

@@ -123,8 +123,18 @@ window.app = new Vue({
 
 			this.chapterSelector.disabled = true;
 
+			const beforeLives = this.game.lives;
 			this.guess(this.chapterSelector.book.position, newValue).then(correct => {
-				if (!correct) this.chapterSelector.book.class = null;
+				if (!correct) {
+					if (beforeLives - this.game.lives === 0.5){
+						this.chapterSelector.book.class = 'wrong-chapter-book';
+						this.chapterSelector.book.wrongChapters.push(Number(newValue));
+					}
+					else{
+						this.chapterSelector.book.class = 'wrong-book';
+					}
+				}
+
 				this.chapterSelector = {
 					book: null,
 					active: false,
@@ -171,6 +181,7 @@ window.app = new Vue({
 
 					this.bookList.books = json.data.books.map(book => {
 						book.class = null;
+						book.wrongChapters = [];
 						return book;
 					});
 
@@ -199,20 +210,6 @@ window.app = new Vue({
 		chooseBook: function(bookPos){
 			if (this.game.difficulty.id === 0) return this.guess(bookPos);
 
-			if (this.chapterSelector.active){
-				if (bookPos !== this.chapterSelector.book.position) return;
-				this.chapterSelector.book.class = null;
-				this.chapterSelector = {
-					book: null,
-					active: false,
-					disabled: false,
-					count: 0,
-					chosen: null
-				};
-				this.bookList.clickable = true;
-				return;
-			}
-
 			const clickedBook = this.bookList.books.find(book => book.position === bookPos);
 			clickedBook.class = 'active-book';
 			
@@ -223,10 +220,10 @@ window.app = new Vue({
 			this.bookList.clickable = false;
 		},
 		guess: function(bookPos, chapterNum){
-			if (!this.game.playing) return Promise.resolve();
+			if (!this.game.playing) return Promise.resolve(false);
 
 			const clickedBook = this.bookList.books.find(book => book.position === bookPos);
-			if (clickedBook.class !== null && clickedBook.class !== 'active-book') return Promise.resolve();
+			if (clickedBook.class !== null && clickedBook.class !== 'active-book') return Promise.resolve(false);
 
 			return fetch('/api/game/' + this.game.id + '/guess', {
 				method: 'POST',
@@ -241,7 +238,7 @@ window.app = new Vue({
 			}).then(handleAPIResponse(this))
 				.then(json => {
 					if (!json.success) return false;
-					
+
 					const { correct, lives, bcv, round } = json.data;
 
 					this.game.lives = lives;
