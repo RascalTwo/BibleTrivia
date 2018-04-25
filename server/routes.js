@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 
 
@@ -35,7 +36,12 @@ const handleAPIRejection = response => error => {
 
 
 module.exports = server => {
-	server.express.get('/', (_, response) => response.sendFile(path.join(server.paths.root, 'client', 'index.html')));
+	server.express.get('/', (_, response) => {
+		const html = fs.readFileSync(path.join(server.paths.root, 'client', 'index.html')).toString();
+		return server.bible.getTranslations().then(translations => {
+			response.send(html.replace(/'={ PAYLOAD }='/g, JSON.stringify(translations)));
+		}).catch(handleAPIRejection(response));
+	});
 
 	server.express.get('/api', (_, response) => server.bible.getRandomVerse().then(verse => response.send({
 		success: true,
@@ -55,7 +61,13 @@ module.exports = server => {
 			message: ['Invalid difficulty ID', 'error']
 		});
 
-		return server.db.startGame(getUserId(request), 1, testamentCode, difficultyId)
+		const translationId = Number(request.body.translation);
+		if (translationId === undefined || isNaN(translationId) || translationId < 1) return response.send({
+			success: false,
+			message: ['Invalid translation ID', 'error']
+		});
+
+		return server.db.startGame(getUserId(request), translationId, testamentCode, difficultyId)
 			.then(result => response.send(result))
 			.catch(handleAPIRejection(response));
 	});

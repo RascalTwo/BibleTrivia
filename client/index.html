@@ -50,10 +50,11 @@
 							</div>
 						</div>
 						<div v-if="referenceMenu" id="reference-menu" class="model" key="1">
-							<div class="model-content">
+							<div class="model-content reference-model">
 								<verse
 									v-bind:text="game.previousRound.verse_text"
 									v-bind:bcv="game.previousRound.verse_bcv"
+									v-bind:translation="game.translation"
 									v-bind:book-map="bookMap"
 								></verse>
 								<button v-on:click="closeReference">Close</button>
@@ -65,7 +66,9 @@
 					<verse
 						v-bind:text="game.currentRound.verse_text"
 						v-bind:bcv="game.currentRound.verse_bcv"
+						v-bind:translation="game.translation"
 						v-bind:book-map="bookMap"
+
 					></verse>
 					<input v-model="bookList.filter" placeholder="Book">
 					<transition-group
@@ -96,13 +99,21 @@
 				<br>
 				<label>New<input type="checkbox" v-model="newTestament" v-bind:disabled="disabled"></label>
 				<br>
-				Difficulty
-				<label id="difficulty-switch">
-					<input type="checkbox" v-model="difficultyEasy" v-bind:disabled="disabled">
-					<div id="difficulty-slider">
-						<span class="on">Easy</span>
-						<span class="off">Hard</span>
-					</div>
+				<span>
+					Difficulty
+					<label id="difficulty-switch">
+						<input type="checkbox" v-model="difficultyEasy" v-bind:disabled="disabled">
+						<div id="difficulty-slider">
+							<span class="on">Easy</span>
+							<span class="off">Hard</span>
+						</div>
+					</label>
+				</span>
+				<br>
+				<label>Translation
+					<select v-model="translationValue" v-bind:disabled="disabled">
+						<option v-for="translation of translations" v-bind:value="translation.id">{{ translation.name }}</option>
+					</select>
 				</label>
 				<br>
 				<button v-on:click="startGame" v-bind:disabled="invalid || disabled">Start Game</button>
@@ -118,10 +129,17 @@
 		<script id="verse-template" type="text/x-template">
 			<div class="verse">
 				<h2 v-if="loc" class="verse-location">{{ loc.book.name }} {{ loc.chapter }}:{{ loc.verse }}</h2>
+				<p v-if="translation" class="verse-translation">{{ translation.code.toUpperCase() }}</p>
 				<div class="verse-text">{{ text }}</div>
 			</div>
 		</script>
 
+		<script type="text/javascript">
+			payload = '={ PAYLOAD }=';
+
+			const translations = typeof payload === 'object' ? payload : [];
+			delete payload;
+		</script>
 		<script type="text/javascript" src="/index.js"></script>
 	</body>
 </html>

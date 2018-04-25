@@ -1,3 +1,5 @@
+/* global translations  */
+
 // Display messages.
 Vue.component('message-box', {
 	props: ['value', 'level'],
@@ -21,9 +23,11 @@ Vue.component('message-box', {
 // Handle creation of a new game.
 Vue.component('start-menu', {
 	data: () => ({
+		translations,
 		difficultyEasy: true,
 		newTestament: true,
 		oldTestament: true,
+		translationValue: 1,
 		disabled: false
 	}),
 	computed: {
@@ -41,7 +45,7 @@ Vue.component('start-menu', {
 	methods: {
 		startGame: function(){
 			this.disabled = true;
-			return this.$emit('submitted', this.testamentCode, Number(!this.difficultyEasy));
+			return this.$emit('submitted', this.testamentCode, Number(!this.difficultyEasy), this.translationValue);
 		}
 	},
 	template: '#start-menu-template'
@@ -65,7 +69,7 @@ Vue.component('life-counter', {
 
 // Displays a verse
 Vue.component('verse', {
-	props: ['text', 'bcv', 'bookMap'],
+	props: ['text', 'bcv', 'translation', 'bookMap'],
 	computed: {
 		loc: function(){
 			if (!this.bcv) return false;
@@ -164,7 +168,7 @@ window.app = new Vue({
 			this.referenceMenu = false;
 		},
 		// Start a new game with the given testaments.
-		startGame: function(testamentCode, difficultyId){
+		startGame: function(testamentCode, difficultyId, translationId){
 			return fetch('/api/game', {
 				method: 'POST',
 				headers: {
@@ -172,7 +176,8 @@ window.app = new Vue({
 				},
 				body: JSON.stringify({
 					testament: testamentCode,
-					difficulty: difficultyId
+					difficulty: difficultyId,
+					translation: translationId
 				}),
 				credentials: 'include'
 			}).then(handleAPIResponse(this))

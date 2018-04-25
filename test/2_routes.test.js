@@ -73,7 +73,8 @@ describe('routes', () => {
 
 		it('creates and returns game instance', () => fetchPOST('/api/game', {
 			testament: 3,
-			difficulty: 0
+			difficulty: 0,
+			translation: 1
 		}).then(response => {
 			expect(response.ok).to.equal(true);
 			return response.json();
@@ -85,7 +86,11 @@ describe('routes', () => {
 
 			expect(game).to.be.a('object');
 			expect(game).to.have.property('id').that.is.a('number');
-			expect(game).to.have.property('translation_id').that.equals(1);
+			expect(game).to.have.property('translation').that.deep.equals({
+				id: 1,
+				code: 'nrsv',
+				name: 'New Revised Standard Version'
+			});
 			expect(game).to.have.property('testament_code').that.equals(3);
 			
 			expect(game).to.have.property('difficulty').that.deep.equals({
@@ -114,7 +119,8 @@ describe('routes', () => {
 		
 		it('old testament', () => fetchPOST('/api/game', {
 			testament: 1,
-			difficulty: 0
+			difficulty: 0,
+			translation: 1
 		}).then(response => {
 			expect(response.ok).to.equal(true);
 			return response.json();
@@ -126,7 +132,8 @@ describe('routes', () => {
 		
 		it('new testament', () => fetchPOST('/api/game', {
 			testament: 2,
-			difficulty: 0
+			difficulty: 0,
+			translation: 1
 		}).then(response => {
 			expect(response.ok).to.equal(true);
 			return response.json();
@@ -143,7 +150,8 @@ describe('routes', () => {
 		beforeEach(() => {
 			return fetchPOST('/api/game', {
 				testament: 3,
-				difficulty: 0
+				difficulty: 0,
+				translation: 1
 			}).then(response => {
 				headers = {
 					cookie: response.headers.get('set-cookie')
@@ -241,7 +249,8 @@ describe('routes', () => {
 			beforeEach(() => {
 				return fetchPOST('/api/game', {
 					testament: 3,
-					difficulty: 1
+					difficulty: 1,
+					translation: 1
 				}).then(response => {
 					headers = {
 						cookie: response.headers.get('set-cookie')
@@ -311,7 +320,8 @@ describe('routes', () => {
 		it('can be won', async () => {
 			const gameResponse = await fetchPOST('/api/game', {
 				testament: 2,
-				difficulty: 0
+				difficulty: 0,
+				translation: 1
 			});
 			
 			const headers = {

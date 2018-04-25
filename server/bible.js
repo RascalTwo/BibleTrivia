@@ -82,6 +82,28 @@ module.exports = class Bible{
 		);
 	}
 
+
+	/**
+	 * Get all translations.
+	 * 
+	 * @returns {Promise<Array<Object>>} Translations
+	 */
+	getTranslations(){
+		return this.driver.all('SELECT * FROM translation');
+	}
+
+
+	/**
+	 * Return a translation by id.
+	 * 
+	 * @param {Number} id ID of translation to get.
+	 * 
+	 * @returns {Promise<Object>}
+	 */
+	getTranslation(id){
+		return this.driver.get('SELECT * FROM translation WHERE id = ?', id);
+	}
+
 	
 	/**
 	 * Get books between min and max position.
@@ -91,9 +113,9 @@ module.exports = class Bible{
 	 * 
 	 * @returns {Promise<Array<Object>>} Array of books.
 	 */
-	getBooks(min = 1, max = 66){
+	getBooks(translationId, min = 1, max = 66){
 		return this.driver.all('SELECT * FROM book WHERE position >= ? AND position <= ? ORDER BY position ASC;', min, max)
-			.then(books => Promise.all(books.map(book => this.driver.get('SELECT MAX(chapter) FROM verse WHERE book = ?', book.position).then(result => {
+			.then(books =>  Promise.all(books.map(book => this.driver.get('SELECT MAX(chapter) FROM verse WHERE book = ? AND translation = ?', book.position, translationId).then(result => {
 				book.chapterCount = result['MAX(chapter)'];
 				return book;
 			}))));

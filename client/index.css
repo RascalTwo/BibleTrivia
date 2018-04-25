@@ -69,6 +69,10 @@ body {
 	border-radius: 25px;
 }
 
+.reference-model {
+	margin-top: 15vh;
+}
+
 /* #region New Game Button */
 
 #new-game-button {
@@ -191,6 +195,17 @@ body {
 
 #game {
 	position: relative;
+}
+
+.verse {
+	position: relative;
+	padding-top: 10px;
+}
+
+.verse-translation {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .verse-text {

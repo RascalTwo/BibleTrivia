@@ -148,7 +148,7 @@ module.exports = class Database{
 
 		const excludedBooks = game.rounds.map(round => Number(round.verse_bcv.split('-')[0]));
 
-		return this.server.bible.getRandomVerse(game.translation_id, min, max, excludedBooks).then(verse => {
+		return this.server.bible.getRandomVerse(game.translation.id, min, max, excludedBooks).then(verse => {
 			const verse_bcv = verse.book + '-' + verse.chapter + '-' + verse.verse;
 			return this.driver.run(
 				'INSERT INTO round (game_id, verse_bcv, picked) VALUES (?, ?, ?);',
@@ -183,7 +183,10 @@ module.exports = class Database{
 			return this.driver.get('SELECT * FROM difficulty WHERE id = ?', game.difficulty_id).then(difficulty => {
 				game.difficulty = difficulty;
 				delete game.difficulty_id;
-
+				return this.server.bible.getTranslation(game.translation_id);
+			}).then(translation => {
+				game.translation = translation;
+				delete game.translation_id;
 				return this.driver.get('SELECT * FROM user WHERE id = ?', game.user_id);
 			}).then(user => {
 				if (!user) user = {
@@ -213,7 +216,7 @@ module.exports = class Database{
 					roundData.ids
 				).then(guesses => guesses.forEach(guess => roundData.map[guess.round_id].guesses.push(guess)));
 			}).then(() => {
-				return Promise.all(roundData.bcvs.map(bcv => this.server.bible.getVerse(game.translation_id, ...bcv)))
+				return Promise.all(roundData.bcvs.map(bcv => this.server.bible.getVerse(game.translation.id, ...bcv)))
 					.then(verses => verses.reduce((map, verse) => {
 						map[verse.book + '-' + verse.chapter + '-' + verse.verse] = verse.text;
 						return map;
@@ -246,7 +249,7 @@ module.exports = class Database{
 				}
 
 				const [min, max] = this.server.bible.testamentCodeToMinMax(game.testament_code);
-				return includeBooks ? this.server.bible.getBooks(min, max) : Promise.resolve(undefined);
+				return includeBooks ? this.server.bible.getBooks(game.translation.id, min, max) : Promise.resolve(undefined);
 			}).then(books => ({
 				success: true,
 				data: { game, books }

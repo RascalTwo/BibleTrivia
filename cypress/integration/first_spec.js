@@ -51,6 +51,22 @@ describe('new game menu', () => {
 			cy.get('#book-list').children().should('have.length', 27);
 		});
 	});
+
+	describe('translations', () => {
+		it('is shown', () => {
+			cy.get('#start-menu').find('select').select('1');
+			cy.get('#start-menu').find('select').should('have.value', '1');
+			cy.get('#start-menu').find('button').click();
+			cy.get('.verse-translation').should('have.text', 'NRSV');
+		});
+
+		it('others can be selected', () => {
+			cy.get('#start-menu').find('select').select('2');
+			cy.get('#start-menu').find('select').should('have.value', '2');
+			cy.get('#start-menu').find('button').click();
+			cy.get('.verse-translation').should('not.have.text', 'NRSV');
+		});
+	});
 });
 
 describe('gameplay', () => {
