@@ -1,3 +1,6 @@
+/// <reference types="Cypress" />
+/* global cy */
+
 const { expect } = require('chai');
 
 beforeEach(() => cy.visit('/'));
