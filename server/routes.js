@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const minifyHTML = require('html-minifier').minify;
 
 /**
  * Get the ID of the current user.
@@ -39,7 +40,25 @@ module.exports = server => {
 	server.express.get('/', (_, response) => {
 		const html = fs.readFileSync(path.join(server.paths.root, 'client', 'index.html')).toString();
 		return server.bible.getTranslations().then(translations => {
-			response.send(html.replace(/'={ PAYLOAD }='/g, JSON.stringify(translations)));
+			response.send(minifyHTML(html.replace(/'={ PAYLOAD }='/g, JSON.stringify(translations)), {
+				caseSensitive: false,
+				collapseBooleanAttributes: true,
+				collapseInlineTagWhitespace: true,
+				collapseWhitespace: true,
+				decodeEntities: true,
+				minifyCSS: true,
+				minifyJS: true,
+				minifyURLs: true,
+				removeAttributeQuotes: true,
+				removeComments: true,
+				removeOptionalTags: true,
+				removeRedundantAttributes: true,
+				removeScriptTypeAttributes: true,
+				removeStyleLinkTypeAttributes: true,
+				sortAttributes: true,
+				sortClassName: true,
+				removeEmptyAttributes: true,
+			}));
 		}).catch(handleAPIRejection(response));
 	});
 

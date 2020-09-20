@@ -1,8 +1,12 @@
 const path = require('path');
+const fs = require('fs');
 
 const express = require('express');
 const morgan = require('morgan');
 const compression = require('compression');
+const minify = require('express-minify');
+const uglifyEs = require('uglify-es');
+const JavaScriptObfuscator = require('javascript-obfuscator');
 
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
@@ -49,6 +53,16 @@ class Server {
 		if (process.env.NODE_ENV !== 'test') this.express.use(morgan('common'));
 
 		this.express.use(compression());
+		this.express.use(minify({
+			uglifyJsModule: uglifyEs,
+			onerror: (...args) => console.error(...args),
+			errorHandler: (...args) => console.error(...args),
+		}));
+		this.express.get('/index.js', (_, res) => {
+			const result = JavaScriptObfuscator.obfuscate(fs.readFileSync(path.join(__dirname, 'client', 'index.js')).toString());
+			res.setHeader('Content-Type', 'text/javascript');
+			return res.send(result.getObfuscatedCode());
+		});
 
 		this.express.use(express.json());
 		this.express.use(express.urlencoded({
