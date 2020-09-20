@@ -213,9 +213,11 @@ window.app = new Vue({
 			this.message.level = null;
 		},
 		chooseBook: function(bookPos){
+			const clickedBook = this.bookList.books.find(book => book.position === bookPos);
+			if (clickedBook.class === 'wrong-book' || clickedBook.class === 'right-book') return Promise.resolve(false);
+
 			if (this.game.difficulty.id === 0) return this.guess(bookPos);
 
-			const clickedBook = this.bookList.books.find(book => book.position === bookPos);
 			clickedBook.class = 'active-book';
 			
 			this.chapterSelector.book = clickedBook;
