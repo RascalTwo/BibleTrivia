@@ -2,6 +2,10 @@
 
 A trivia game that tests your knowlage of where verses are in the Bible.
 
+https://user-images.githubusercontent.com/9403665/129601925-3d74cc16-5327-45b3-8973-fc67ef2f72cb.mp4
+
+https://user-images.githubusercontent.com/9403665/129601939-0019364c-0050-4ecb-ae80-5f1ef8960790.mp4
+
 ## Structure
 
 `server.js` is the entrypoint for the entire application.
