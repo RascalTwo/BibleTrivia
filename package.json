@@ -6,6 +6,7 @@
   "author": "Rascal_Two <therealrascaltwo@gmail.com>",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "dev": "nodemon server.js --watch server.js --watch server/",
     "pre-commit": "npm-run-all eslint test",
     "eslint": "eslint server.js server/ client/index.js test/",

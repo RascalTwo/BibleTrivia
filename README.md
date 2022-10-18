@@ -1,10 +1,34 @@
 # Bible Trivia
 
-A trivia game that tests your knowlage of where verses are in the Bible.
+A trivia game that tests your knowledge of where verses are in the Bible.
+
+**Link to project:** https://BibleTrivia.rascaltwo.repl.co
 
 https://user-images.githubusercontent.com/9403665/129601925-3d74cc16-5327-45b3-8973-fc67ef2f72cb.mp4
 
 https://user-images.githubusercontent.com/9403665/129601939-0019364c-0050-4ecb-ae80-5f1ef8960790.mp4
+
+## How It's Made
+
+**Tech Used:** HTML, CSS, JavaScript, Node.js, Vue.js, Express, SQLite
+
+With an Express server using SQLite databases for both games and the Bible texts, then a Vue.js-powered single page application frontend to render the starting menu, and gameplay screens.
+
+The Bible textual data was downloaded & parsed from the [dborza/bible-tools](https://github.com/dborza/bible-tools) GitHub repository, and then imported into the SQLite database.
+
+Testing is done both with Mocha with Coverage for the backend, and Cypress for the frontend.
+
+## Optimizations
+
+On the backend the most impactful optimization made was the database-ification of the raw `.xml` Bible files, allowing for the same data to be quickly queried to generate new game rounds.
+
+The inclusion of initially-needed data in the rendered `index.html`, reducing the number of API requests for the user to begin interacting with the game to zero - of course aside from the usage of a frontend framework such as Vue.js, allowing the game to be built as a single page application and all the state to be efficiently managed.
+
+While I didn't have enough time to implement it, the next features would have been user authentication, and a leaderboard to track the top scores accordingly.
+
+## Lessons Learned
+
+Sourcing and transforming the needed Bible data was a lesson, in addition to the usage of Vue.js and the built-in transitions and animations it provides.
 
 ## Structure
 
